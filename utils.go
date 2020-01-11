@@ -89,7 +89,6 @@ func (nn *NN) Save(path string) error {
 
 /*
 Load neural network from file
-Return the neural network and true if the load successful or false otherwise
 */
 func Load(path string) (NN, error) {
 	lock.Lock()
