@@ -59,4 +59,22 @@ func TestPredict(t *testing.T) {
 			t.Errorf("XOR test failed. Got (%f XOR %f) == %f, want %f.", input[0], input[1], math.Round(predict[0]), output[0])
 		}
 	}
+
+	// Regression test
+	regTest := [][][]float64 {
+		{{1}, {2}},
+		{{2}, {4}},
+		{{5}, {10}},
+		{{8}, {16}},
+	}
+	nn.Config(1, []int{3, 3}, 1, true)
+	nn.Train(regTest, 3000, 0.6, 0.4)
+	for i := 0; i < len(regTest); i++ {
+		input := regTest[i][0]
+		output := regTest[i][1]
+		predict := nn.Predict(input)
+		if math.Round(predict[0]) != output[0] {
+			t.Errorf("Regression test failed. Got %f with input %f, want %f.", math.Round(predict[0]), input[0], output[0])
+		}
+	}
 }

@@ -101,7 +101,12 @@ func (nn *NN) feedForward(inputs []float64) []float64 {
 				sum += nn.Activations[k-1][j] * nn.Weights[k-1][j][i]
 			}
 
-			nn.Activations[k][i] = relu(sum)
+			if nn.Regression {
+				// Use sigmoid to avoid explosion
+				nn.Activations[k][i] = sigmoid(sum)
+			} else {
+				nn.Activations[k][i] = relu(sum)
+			}
 		}
 	}
 
@@ -158,7 +163,11 @@ func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 				e += deltas[k+1][j] * nn.Weights[k+1][i][j]
 			}
 
-			deltas[k][i] = drelu(nn.Activations[k+1][i]) * e
+			if nn.Regression {
+				deltas[k][i] = dsigmoid(nn.Activations[k+1][i]) * e
+			} else {
+				deltas[k][i] = drelu(nn.Activations[k+1][i]) * e
+			}
 		}
 	}
 
