@@ -8,6 +8,8 @@ import (
 
 // NN struct is used to represent a neural network
 type NN struct {
+	// Whether the problem is regression or classification
+	Regression bool
 	// Number of nodes in each layer
 	NNodes []int
 	// Activations for each layer
@@ -23,10 +25,11 @@ New creates a new neural network
 'nInputs' is number of nodes in input layer
 'nHiddens' is array of numbers of nodes in hidden layers
 'nOutputs' is number of nodes in output layer
+'isRegression' is whether the problem is regression or classification
 */
-func New(nInputs int, nHiddens []int, nOutputs int) NN {
+func New(nInputs int, nHiddens []int, nOutputs int, isRegression bool) NN {
 	nn := NN{}
-	nn.Config(nInputs, nHiddens, nOutputs)
+	nn.Config(nInputs, nHiddens, nOutputs, isRegression)
 	return nn
 }
 
@@ -35,11 +38,14 @@ Config the neural network, also reset all trained weights
 'nInputs' is number of nodes in input layer
 'nHiddens' is array of numbers of nodes in hidden layers
 'nOutputs' is number of nodes in output layer
+'isRegression' is whether the problem is regression or classification
 */
-func (nn *NN) Config(nInputs int, nHiddens []int, nOutputs int) {
+func (nn *NN) Config(nInputs int, nHiddens []int, nOutputs int, isRegression bool) {
 	if len(nHiddens) == 0 {
-		log.Fatal("Should have at least 1 hidden layers")
+		log.Fatal("Should have at least 1 hidden layer")
 	}
+
+	nn.Regression = isRegression
 
 	nn.NNodes = []int{
 		nInputs + 1, // +1 for bias
@@ -77,7 +83,7 @@ func (nn *NN) Config(nInputs int, nHiddens []int, nOutputs int) {
 func (nn *NN) feedForward(inputs []float64) []float64 {
 	NLayers := len(nn.NNodes)
 	if NLayers < 3 {
-		log.Fatal("Should have at least 1 hidden layers")
+		log.Fatal("Should have at least 1 hidden layer")
 	}
 
 	if len(inputs) != nn.NNodes[0]-1 {
@@ -106,7 +112,11 @@ func (nn *NN) feedForward(inputs []float64) []float64 {
 			sum += nn.Activations[NLayers-2][j] * nn.Weights[NLayers-2][j][i]
 		}
 
-		nn.Activations[NLayers-1][i] = sigmoid(sum)
+		if nn.Regression {
+			nn.Activations[NLayers-1][i] = linear(sum)
+		} else {
+			nn.Activations[NLayers-1][i] = sigmoid(sum)
+		}
 	}
 
 	return nn.Activations[NLayers-1]
@@ -122,7 +132,7 @@ return the prediction error
 func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 	NLayers := len(nn.NNodes)
 	if NLayers < 3 {
-		log.Fatal("Should have at least 1 hidden layers")
+		log.Fatal("Should have at least 1 hidden layer")
 	}
 
 	if len(targets) != nn.NNodes[NLayers-1] {
@@ -132,7 +142,11 @@ func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 	deltas := make([][]float64, NLayers-1)
 	deltas[NLayers-2] = vector(nn.NNodes[NLayers-1], 0.0)
 	for i := 0; i < nn.NNodes[NLayers-1]; i++ {
-		deltas[NLayers-2][i] = dsigmoid(nn.Activations[NLayers-1][i]) * (targets[i] - nn.Activations[NLayers-1][i])
+		if nn.Regression {
+			deltas[NLayers-2][i] = dlinear(nn.Activations[NLayers-1][i]) * (targets[i] - nn.Activations[NLayers-1][i])
+		} else {
+			deltas[NLayers-2][i] = dsigmoid(nn.Activations[NLayers-1][i]) * (targets[i] - nn.Activations[NLayers-1][i])
+		}
 	}
 
 	for k := len(deltas) - 2; k >= 0; k-- {

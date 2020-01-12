@@ -31,6 +31,14 @@ func vector(I int, fill float64) []float64 {
 	return v
 }
 
+func linear(x float64) float64 {
+	return x
+}
+
+func dlinear(y float64) float64 {
+	return 1
+}
+
 func sigmoid(x float64) float64 {
 	return 1 / (1 + math.Exp(-x))
 }

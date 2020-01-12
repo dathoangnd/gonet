@@ -13,7 +13,7 @@ func TestPredict(t *testing.T) {
 		{{1, 0}, {0}},
 		{{1, 1}, {1}},
 	}
-	nn := New(2, []int{4}, 1)
+	nn := New(2, []int{4}, 1, false)
 	nn.Train(andTest, 3000, 0.4, 0.2)
 	for i := 0; i < len(andTest); i++ {
 		input := andTest[i][0]
@@ -31,7 +31,7 @@ func TestPredict(t *testing.T) {
 		{{1, 0}, {1}},
 		{{1, 1}, {1}},
 	}
-	nn.Config(2, []int{4}, 1)
+	nn.Config(2, []int{4}, 1, false)
 	nn.Train(orTest, 3000, 0.4, 0.2)
 	for i := 0; i < len(orTest); i++ {
 		input := orTest[i][0]
@@ -49,7 +49,7 @@ func TestPredict(t *testing.T) {
 		{{1, 0}, {1}},
 		{{1, 1}, {0}},
 	}
-	nn.Config(2, []int{4}, 1)
+	nn.Config(2, []int{4}, 1, false)
 	nn.Train(xorTest, 3000, 0.4, 0.2)
 	for i := 0; i < len(xorTest); i++ {
 		input := xorTest[i][0]

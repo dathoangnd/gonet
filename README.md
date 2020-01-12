@@ -42,7 +42,8 @@ func main() {
 	// 2 nodes in the input layer
 	// 2 hidden layers with 4 nodes each
 	// 1 node in the output layer
-	nn := gonet.New(2, []int{4, 4}, 1)
+	// The problem is classification, not regression
+	nn := gonet.New(2, []int{4, 4}, 1, false)
 
 	// Train the network
 	// Run for 3000 epochs
