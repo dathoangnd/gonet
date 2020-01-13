@@ -61,7 +61,7 @@ func TestPredict(t *testing.T) {
 	}
 
 	// Regression test
-	regTest := [][][]float64 {
+	regTest := [][][]float64{
 		{{1}, {2}},
 		{{2}, {4}},
 		{{5}, {10}},
