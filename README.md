@@ -48,7 +48,8 @@ func main() {
 	// Train the network
 	// Run for 3000 epochs
 	// The learning rate is 0.4 and the momentum factor is 0.2
-	nn.Train(trainingData, 3000, 0.4, 0.2)
+	// Enable debug mode to log learning error every 1000 iterations
+	nn.Train(trainingData, 3000, 0.4, 0.2, true)
 
 	// Predict
 	testInput := []float64{1, 0}
@@ -69,11 +70,6 @@ func main() {
 ```
 ## Documentation
 See: [http://godoc.org/github.com/dathoangnd/gonet](http://godoc.org/github.com/dathoangnd/gonet)
-## Authors
-
-* [**Dat Hoang**](https://github.com/dathoangnd) - *Initial work*
-
-See also the list of [contributors](https://github.com/dathoangnd/gonet/graphs/contributors) who participated in this project.
 
 ## License
 

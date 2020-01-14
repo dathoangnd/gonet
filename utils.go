@@ -76,9 +76,7 @@ func unmarshal(r io.Reader, v interface{}) error {
 	return json.NewDecoder(r).Decode(v)
 }
 
-/*
-Save neural network to file
-*/
+// Save neural network to file
 func (nn *NN) Save(path string) error {
 	lock.Lock()
 	defer lock.Unlock()
@@ -95,9 +93,7 @@ func (nn *NN) Save(path string) error {
 	return err
 }
 
-/*
-Load neural network from file
-*/
+// Load neural network from file
 func Load(path string) (NN, error) {
 	lock.Lock()
 	defer lock.Unlock()
