@@ -14,7 +14,7 @@ func TestPredict(t *testing.T) {
 		{{1, 1}, {1}},
 	}
 	nn := New(2, []int{4}, 1, false)
-	nn.Train(andTest, 3000, 0.4, 0.2)
+	nn.Train(andTest, 3000, 0.4, 0.2, false)
 	for i := 0; i < len(andTest); i++ {
 		input := andTest[i][0]
 		output := andTest[i][1]
@@ -32,7 +32,7 @@ func TestPredict(t *testing.T) {
 		{{1, 1}, {1}},
 	}
 	nn.Config(2, []int{4}, 1, false)
-	nn.Train(orTest, 3000, 0.4, 0.2)
+	nn.Train(orTest, 3000, 0.4, 0.2, false)
 	for i := 0; i < len(orTest); i++ {
 		input := orTest[i][0]
 		output := orTest[i][1]
@@ -50,7 +50,7 @@ func TestPredict(t *testing.T) {
 		{{1, 1}, {0}},
 	}
 	nn.Config(2, []int{4}, 1, false)
-	nn.Train(xorTest, 3000, 0.4, 0.2)
+	nn.Train(xorTest, 3000, 0.4, 0.2, false)
 	for i := 0; i < len(xorTest); i++ {
 		input := xorTest[i][0]
 		output := xorTest[i][1]
@@ -68,7 +68,7 @@ func TestPredict(t *testing.T) {
 		{{8}, {16}},
 	}
 	nn.Config(1, []int{3, 3}, 1, true)
-	nn.Train(regTest, 3000, 0.6, 0.4)
+	nn.Train(regTest, 3000, 0.6, 0.4, false)
 	for i := 0; i < len(regTest); i++ {
 		input := regTest[i][0]
 		output := regTest[i][1]

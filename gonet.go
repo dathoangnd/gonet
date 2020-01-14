@@ -20,26 +20,32 @@ type NN struct {
 	Changes [][][]float64
 }
 
-/*
-New creates a new neural network
-'nInputs' is number of nodes in input layer
-'nHiddens' is array of numbers of nodes in hidden layers
-'nOutputs' is number of nodes in output layer
-'isRegression' is whether the problem is regression or classification
-*/
+// New creates a new neural network
+//
+// 'nInputs' is number of nodes in input layer
+//
+// 'nHiddens' is array of numbers of nodes in hidden layers
+//
+// 'nOutputs' is number of nodes in output layer
+//
+// 'isRegression' is whether the problem is regression or classification
+//
+// return the neural network
 func New(nInputs int, nHiddens []int, nOutputs int, isRegression bool) NN {
 	nn := NN{}
 	nn.Config(nInputs, nHiddens, nOutputs, isRegression)
 	return nn
 }
 
-/*
-Config the neural network, also reset all trained weights
-'nInputs' is number of nodes in input layer
-'nHiddens' is array of numbers of nodes in hidden layers
-'nOutputs' is number of nodes in output layer
-'isRegression' is whether the problem is regression or classification
-*/
+// Config the neural network, also reset all trained weights
+//
+// 'nInputs' is number of nodes in input layer
+//
+// 'nHiddens' is array of numbers of nodes in hidden layers
+//
+// 'nOutputs' is number of nodes in output layer
+//
+// 'isRegression' is whether the problem is regression or classification
 func (nn *NN) Config(nInputs int, nHiddens []int, nOutputs int, isRegression bool) {
 	if len(nHiddens) == 0 {
 		log.Fatal("Should have at least 1 hidden layer")
@@ -127,13 +133,11 @@ func (nn *NN) feedForward(inputs []float64) []float64 {
 	return nn.Activations[NLayers-1]
 }
 
-/*
-Update weights with Back Propagation algorithm
-'targets' is traning outputs
-'lRate' is learning rate
-'mFactor' is used by momentum gradient discent
-return the prediction error
-*/
+// Update weights with Back Propagation algorithm
+// 'targets' is traning outputs
+// 'lRate' is learning rate
+// 'mFactor' is used by momentum gradient discent
+// return the prediction error
 func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 	NLayers := len(nn.NNodes)
 	if NLayers < 3 {
@@ -187,18 +191,19 @@ func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 	return err
 }
 
-/*
-Train the neural network
-'inputs' is the training data
-'iterations' is the number to run feed forward and back propagation
-'lRate' is learning rate
-'mFactor' is used by momentum gradient discent
-return errors track lists during training time
-*/
-func (nn *NN) Train(inputs [][][]float64, iterations int, lRate, mFactor float64) []float64 {
-	errors := make([]float64, 0)
-
-	for i := 0; i < iterations; i++ {
+// Train the neural network
+//
+// 'inputs' is the training data
+//
+// 'iterations' is the number to run feed forward and back propagation
+//
+// 'lRate' is learning rate
+//
+// 'mFactor' is used by momentum gradient discent
+//
+// 'debug' is whether or not to log learning error every 1000 iterations
+func (nn *NN) Train(inputs [][][]float64, iterations int, lRate, mFactor float64, debug bool) {
+	for i := 1; i <= iterations; i++ {
 		var e float64
 		for _, p := range inputs {
 			nn.feedForward(p[0])
@@ -206,17 +211,13 @@ func (nn *NN) Train(inputs [][][]float64, iterations int, lRate, mFactor float64
 			tmp := nn.backPropagate(p[1], lRate, mFactor)
 			e += tmp
 		}
-		if i%1000 == 0 {
-			errors = append(errors, e)
+		if debug && i%1000 == 0 {
+			log.Printf("%d iterations: %f\n", i, e)
 		}
 	}
-
-	return errors
 }
 
-/*
-Predict output with new input
-*/
+// Predict output with new input
 func (nn *NN) Predict(input []float64) []float64 {
 	return nn.feedForward(input)
 }
