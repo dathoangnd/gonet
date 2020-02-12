@@ -152,9 +152,9 @@ func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 	deltas[NLayers-2] = vector(nn.NNodes[NLayers-1], 0.0)
 	for i := 0; i < nn.NNodes[NLayers-1]; i++ {
 		if nn.Regression {
-			deltas[NLayers-2][i] = dlinear(nn.Activations[NLayers-1][i]) * (targets[i] - nn.Activations[NLayers-1][i])
+			deltas[NLayers-2][i] = dlinear(nn.Activations[NLayers-1][i]) * (nn.Activations[NLayers-1][i] - targets[i])
 		} else {
-			deltas[NLayers-2][i] = dsigmoid(nn.Activations[NLayers-1][i]) * (targets[i] - nn.Activations[NLayers-1][i])
+			deltas[NLayers-2][i] = dsigmoid(nn.Activations[NLayers-1][i]) * (nn.Activations[NLayers-1][i] - targets[i])
 		}
 	}
 
@@ -179,7 +179,7 @@ func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 		for i := 0; i < nn.NNodes[k]; i++ {
 			for j := 0; j < nn.NNodes[k+1]; j++ {
 				change := deltas[k][j] * nn.Activations[k][i]
-				nn.Weights[k][i][j] = nn.Weights[k][i][j] + lRate*change + mFactor*nn.Changes[k][i][j]
+				nn.Weights[k][i][j] = nn.Weights[k][i][j] - (lRate*change + mFactor*nn.Changes[k][i][j])
 				nn.Changes[k][i][j] = change
 			}
 		}
