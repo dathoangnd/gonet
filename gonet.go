@@ -179,7 +179,7 @@ func (nn *NN) backPropagate(targets []float64, lRate, mFactor float64) float64 {
 		for i := 0; i < nn.NNodes[k]; i++ {
 			for j := 0; j < nn.NNodes[k+1]; j++ {
 				change := deltas[k][j] * nn.Activations[k][i]
-				nn.Weights[k][i][j] = nn.Weights[k][i][j] - (lRate*change + mFactor*nn.Changes[k][i][j])
+				nn.Weights[k][i][j] = nn.Weights[k][i][j] - lRate*(change+mFactor*nn.Changes[k][i][j])
 				nn.Changes[k][i][j] = change
 			}
 		}
