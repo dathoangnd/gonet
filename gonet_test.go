@@ -62,10 +62,10 @@ func TestPredict(t *testing.T) {
 
 	// Regression test
 	regTest := [][][]float64{
-		{{1}, {2}},
-		{{2}, {4}},
+		{{3}, {6}},
+		{{4}, {8}},
 		{{5}, {10}},
-		{{8}, {16}},
+		{{6}, {12}},
 	}
 	nn.Config(1, []int{3, 3}, 1, true)
 	nn.Train(regTest, 3000, 0.6, 0.4, false)
